@@ -1,0 +1,103 @@
+{% extends 'ec_sg/base.html' %}
+
+{% block content %}
+
+<h1> Security group list </h1>
+
+
+<form method="GET" action="./">
+<table>
+	<tr class="alt">
+		<td> Account </td>
+		<td colspan="7">
+			<select name="account" onchange="this.form.submit()">
+				<option value="default" {% if current_profile == "default" %} selected="selected" {% endif %} >default</option>
+				<option value="annmoon" {% if current_profile == "annmoon" %} selected="selected" {% endif %} >annmoon</option>
+				<option value="annmoon2" {% if current_profile == "annmoon2" %} selected="selected" {% endif %} >annmoon2</option>
+			</select>
+		</td>
+	</tr>
+	
+</table>
+</form>
+
+<table>
+	<tr class="alt">
+		<th rowspan="2"> SG ID </th>
+		<th rowspan="2"> SG Name </th>
+		<th rowspan="2"> SG Tag name </th>
+		<th colspan="3"> Inbound </th>
+	</tr>
+	<tr class="alt">
+		<th> Protocol </th>
+		<th> Port Range </th>
+		<th> Source </th>
+	</tr>
+
+	{% for i in data %}
+
+		<tr>
+			<td> <a href="{{ console_url }}#SecurityGroups:search={{ i.GroupId }}" target="{{ i.GroupId }}"> {{ i.GroupId }} </a> </td>
+			<td> 
+				{% if i.GroupName|slice:"-4:" in sg_list %}
+					{{ i.GroupName }}
+				{% else %}
+					<font color="red"><b>{{ i.GroupName }}</b></font>
+				{% endif %}
+			</td>
+			<td> 
+				{% for t in i.Tags %}
+					{% if t.Key == 'Name' %}
+						{{ t.Value }}
+					{% endif %}
+				{% endfor %}
+			</td>
+
+			<td colspan="3">
+				<table width="100%" class="t1">
+				{% for j in i.IpPermissions %}
+					<tr>
+						<td> 
+							{% if j.IpProtocol == "-1" or j.IpProtocol == '' %}
+								<font color="blue"><b>All</b></font>
+							{% else %}
+								{{ j.IpProtocol }}
+							{% endif %}
+						</td>
+						<td> 
+							{% if j.ToPort == -1 or j.ToPort|stringformat:"i" == '' %}
+								<font color="blue"><b>All</b></font>
+							{% else %}
+								{{ j.ToPort }}
+							{% endif %}
+						</td>
+						<td>
+							{% if not j.IpRanges %}
+								{% if j.UserIdGroupPairs %}
+									{% for p in j.UserIdGroupPairs %}
+										<a href="{{ console_url }}#SecurityGroups:search={{ p.GroupId }}" target="{{ p.GroupId }}"> {{ p.GroupId }} </a> <br>
+									{% endfor %}
+								{% endif %}
+
+							{% else %}
+								{% for k in j.IpRanges %}
+									{% if "10.1.0.0" in k.CidrIp %}
+										<font color="red"> <b> {{ k.CidrIp }} </b></font> 
+									{% else %}
+										{{ k.CidrIp }} 
+									{% endif %}
+									<br>
+								{% endfor %}
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				</table>
+			</td>
+		</tr>
+
+	{% endfor %}
+</table>
+
+{% endblock content %}
+

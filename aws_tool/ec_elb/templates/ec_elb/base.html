@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>AWS TOOL</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'ec_elb/awstool.css' %}" />
+    </head>
+
+    <body>
+
+
+    <ul>
+        <li><a {% if request.path == "/" %} class="active" {% endif %} href="/">HOME</a></li>
+        <li><a {% if "ec2-list" in request.path %} class="active" {% endif %} href="/ec_sg/ec2-list/">EC2</a></li>
+        <li><a {% if "sg-list" in request.path %} class="active" {% endif %} href="/ec_sg/sg-list/">EC2-SG</a></li>
+        <li><a {% if "ec_elb" in request.path %} class="active" {% endif %} href="/ec_elb/elb-list/">ELB</a></li>
+    </ul>
+
+    <p></p>
+
+
+    {% block content %}
+    {% endblock %}
+
+    </body>
+</html>

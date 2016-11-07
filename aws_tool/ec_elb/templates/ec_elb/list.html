@@ -1,0 +1,67 @@
+{% extends 'ec_elb/base.html' %}
+{% load ge_lib %}
+{% block content %}
+
+<h1> ELB list </h1>
+
+
+<form method="GET" action="./">
+<table>
+	<tr class="alt">
+		<td> Account </td>
+		<td colspan="7">
+			<select name="account" onchange="this.form.submit()">
+				<option value="default" {% if current_profile == "default" %} selected="selected" {% endif %} >default</option>
+				<option value="annmoon" {% if current_profile == "annmoon" %} selected="selected" {% endif %} >annmoon</option>
+				<option value="annmoon2" {% if current_profile == "annmoon2" %} selected="selected" {% endif %} >annmoon2</option>
+			</select>
+		</td>
+	</tr>
+
+</table>
+</form>
+
+<table>
+
+	<tr class="alt">
+		<th> LoadBalancerName </th>
+		<th> DNSName </th>
+		<th> Health check </th>
+	</tr>
+	<tr class="alt">
+		<th> Instances ID </th>
+		<th> Status </th>
+		<th> Instances Name </th>
+	</tr>
+
+
+	{% for d in data %}
+		<tr bgcolor="F0DDF5">
+			<td><a href="{{ console_url }}#LoadBalancers:search={{ d.0 }}" target="{{ d.0 }}"> {{ d.0 }} </a></td>
+			<td> {{ d.1 }} </td>
+			<td> 
+				{% for tk, tv in d.3.items %}
+					{% if tk == 'Target' %}
+						{{ tv }}
+					{% endif %}
+				{% endfor %}
+			</td>
+		<tr>
+
+		{% for key, values in d.2.items %}
+		<tr>
+			<td> <a href="{{ console_url }}#Instances:search={{ key }}" target="{{ key }}">{{ key }} </a></td>
+
+			{% for v in values %}
+
+			<td>{{ v }}</td>
+			
+			{% endfor %}
+		</tr>
+		{% endfor %}
+
+	{% endfor %}
+</table>
+
+{% endblock content %}
+

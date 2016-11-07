@@ -1,0 +1,111 @@
+{% extends 'ec_sg/base.html' %}
+
+{% block content %}
+
+<h1> EC2 instance list </h1>
+
+
+<form method="GET" action="./">
+<table>
+	<tr class="alt">
+		<td> Account </td>
+		<td colspan="7">
+			<select name="account" onchange="this.form.submit()">
+				<option value="default" {% if current_profile == "default" %} selected="selected" {% endif %} >default</option>
+				<option value="annmoon" {% if current_profile == "annmoon" %} selected="selected" {% endif %} >annmoon</option>
+				<option value="annmoon2" {% if current_profile == "annmoon2" %} selected="selected" {% endif %} >annmoon2</option>
+			</select>
+		</td>
+	</tr>
+	<tr class="alt">
+		<td> Status </td>
+		<td> 
+			<select name="ins" onchange="this.form.submit()">
+				<option value="">All</option>
+				<option value="16" {% if current_status == '16' %} selected="selected" {% endif %} >running</option>
+				<option value="80" {% if current_status == '80' %} selected="selected" {% endif %} >stopped</option>
+				<option value="64" {% if current_status == '64' %} selected="selected" {% endif %} >stopping</option>
+				<option value="48" {% if current_status == '48' %} selected="selected" {% endif %} >terminated</option>
+				<option value="32" {% if current_status == '32' %} selected="selected" {% endif %} >shutting-down</option>
+				<option value="0" {% if current_status == '0' %} selected="selected" {% endif %} >pending</option>
+			</select>
+		</td>
+
+		<td> </td>
+
+		<td> VPC </td>
+
+		<td>
+			<select name="vpc" onchange="this.form.submit()">
+				<option value="">All</option>
+
+				{% for vpc in vpcs %}
+					{% for vpc_name in vpc.Tags %}
+						{% if vpc_name.Key == 'Name' %}
+							<option value="{{ vpc.VpcId }}" {% if vpc.VpcId == current_vpc %} selected="selected" {% endif %} > {{ vpc_name.Value }} ({{ vpc.VpcId }}) </option>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+
+			</select>
+		</td>
+
+		<td> </td>
+
+		<td> Subnet </td>
+
+		<td>
+			<select name="subnet" onchange="this.form.submit()">
+				<option value="">All</option>
+
+				{% for subnet in subnets %}
+					{% for subnet_name in subnet.Tags %}
+						{% if subnet_name.Key == 'Name' %}
+							<option value="{{ subnet.SubnetId }}" {% if subnet.SubnetId == current_subnet %} selected="selected" {% endif %}> {{ subnet_name.Value }} ({{ subnet.SubnetId }}) </option>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+
+			</select>
+		</td>
+
+
+	</tr>
+</table>
+</form>
+
+<table>
+	<tr class="alt">
+		<th> Private IP </th>
+	</tr>
+
+	{% for i in data %}
+
+		{% for j in i.Instances %}
+
+
+				{% if j.State.Name == 'running' %}
+					<tr>
+				{% else %}
+					<tr bgcolor="#FFFFE0">
+				{% endif %}
+
+
+					<td>
+						{% for n in j.NetworkInterfaces %}
+							{% for p in n.PrivateIpAddresses %}
+								{{ p.PrivateIpAddress }}
+							{% endfor %}
+						{% endfor %}
+					</td>
+					
+
+				</tr>
+
+		{% endfor %}
+
+	{% endfor %}
+</table>
+
+{% endblock content %}
+
