@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table>
+	<tr>
+		<td>Logged out</td>
+	</tr>
+	<tr>
+		<td>Thanks for spending some quality time with the Web site today.</td>
+	</tr>
+	<tr>
+		<td><a href="{% url 'accountldap:login' %}">[login]</a></td>
+	</tr>
+</table>
+
+
+{% endblock content %}

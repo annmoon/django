@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<h1> LDAP User list </h1>
+
+
+<table>
+	<tr class="alt">
+		<th> LdapID </th>
+		<th> Email </th>
+		<th> Accessable host </th>
+		<th> Group Number </th>
+	</tr>
+
+	{% for i in data %}
+		<tr>
+			<td>{{i.attributes.cn.0}}</td>
+			<td>{{i.attributes.mail.0}}</td>
+			<td>{{i.attributes.host}}</td>
+			<td>{{i.attributes.gidNumber}}</td>
+		</tr>
+
+	{% endfor %}
+</table>
+
+{% else %}
+<table>
+	<tr class="alt">
+		<th> you don't have permission here. please <a href="{% url 'accountldap:login' %}">[login]</a>  </th>
+	</tr>
+</table>
+
+{% endif %}
+
+{% endblock content %}
+

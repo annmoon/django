@@ -1,0 +1,12 @@
+<html>
+	<head></head>
+	
+	<body>
+		<p>
+		You're receiving this email because you requested a password reset for your user account at {{ site_name }}. <br><br>
+		Please go to the following page and choose a new password: <br>
+		{{ domain }}{% url 'accountldap:reset-user-pw' uidb64=uid token=token %} <br><br>
+		Thanks for using our site!
+		</p>
+	</body>
+</html>

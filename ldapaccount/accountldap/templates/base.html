@@ -1,0 +1,34 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>LDAP TOOL</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'ldap.css' %}" />
+    </head>
+
+    <body>
+
+
+    <ul>
+        <li><a {% if request.path == "/" %} class="active" {% endif %} href="{% url 'accountldap:index' %}">HOME</a></li>
+
+        {% if user.is_authenticated %}
+        <li><a {% if "user-list" in request.path %} class="active" {% endif %} href="{% url 'accountldap:users' %}">User List</a></li>
+        <li><a {% if "user-add" in request.path %} class="active" {% endif %} href="{% url 'accountldap:user-add' %}">User Add</a></li>
+        <li><a {% if "user-pw" in request.path %} class="active" {% endif %} href="{% url 'accountldap:user-pw' %}">Password reset</a></li>
+        <li class="right"><a href="{% url 'accountldap:logout' %}">[logout]</a></li>
+        <li class="right"><a href="#"> Welcome, {{ user.username }} </a></li>
+        
+
+        {% else %}
+        <li class="right"><a href="{% url 'accountldap:login' %}"> Welcome, Guest [login]</a> </li>
+        {% endif %}
+    </ul>
+
+    <p></p>
+
+
+    {% block content %}
+    {% endblock %}
+
+    </body>
+</html>

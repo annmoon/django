@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Please try again.</p>
+{% endif %}
+
+
+<form action="{% url 'accountldap:reset-user-confirm' %}" method="post">
+<input type='hidden' name='uidb64' value='{{ uidb64 }}' />
+<input type='hidden' name='token' value='{{ token }}' />
+<table>
+    {% csrf_token %}
+    {{ form }}
+    <tr>
+    	<td colspan="2"><input type="submit" value="Submit" /></td>
+    </tr>
+</table>
+</form>
+
+{% endblock content %}

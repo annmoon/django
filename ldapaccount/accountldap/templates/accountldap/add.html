@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Please try again.</p>
+{% endif %}
+
+
+<form action="{% url 'accountldap:user-add' %}" method="post">
+
+<table>
+	<tr>
+		<td colspan="2">* On hostname, please input hostname which you need to access with comma (,) </td>
+	</tr>
+    {% csrf_token %}
+    {{ form }}
+    <tr>
+    	<td><a href="{% url 'accountldap:users' %}"><input type="button" value="List" /></a></td>
+    	<td><input type="submit" value="Submit" /></td>
+    </tr>
+</table>
+</form>
+
+
+{% endblock content %}
